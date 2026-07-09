@@ -1,0 +1,17 @@
+{
+  "name": "Our Dinner Plan",
+  "short_name": "Dinner Plan",
+  "description": "Weekly meal planning, scalable recipes, and a shopping list for home cooks",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EFE7D8",
+  "theme_color": "#3E6259",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
