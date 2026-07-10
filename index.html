@@ -121,14 +121,14 @@ button{font-family:inherit;}
 .empty-hint{color:var(--ink-soft); font-size:.85rem; text-align:center; padding:18px 6px;}
 
 /* stepper */
-.stepper{display:inline-flex; align-items:center; gap:0; border:2px solid var(--jade); border-radius:999px; overflow:hidden;}
+.stepper{display:inline-flex; align-items:center; gap:0; border:1.5px solid var(--jade); border-radius:999px; overflow:hidden; flex:none; max-width:100%;}
 .stepper button{
-  width:44px; height:44px; border:none; background:var(--jade); color:#fff;
-  font-size:1.6rem; font-weight:700; cursor:pointer; line-height:1;
+  width:24px; height:24px; border:none; background:var(--jade); color:#fff;
+  font-size:.9rem; font-weight:700; cursor:pointer; line-height:1;
 }
 .stepper .val{
-  min-width:108px; text-align:center; font-weight:800; font-size:1.15rem;
-  color:var(--jade-dark); background:#fff;
+  min-width:56px; text-align:center; font-weight:800; font-size:.68rem;
+  color:var(--jade-dark); background:#fff; padding:0 2px;
 }
 
 /* plan tab */
@@ -175,9 +175,31 @@ button{font-family:inherit;}
 .chip.active{background:var(--jade); border-color:var(--jade); color:#fff;}
 .recipe-card{padding:22px 20px; margin-bottom:16px;}
 .recipe-card .r-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
-.recipe-card .r-title{font-family:'Fraunces',serif; font-weight:700; font-size:1.6rem; display:flex; align-items:center; gap:8px;}
-.recipe-card .r-cat-ic{font-size:1.75rem;}
+.recipe-card .r-title{font-family:'Fraunces',serif; font-weight:700; font-size:1.4rem; display:flex; align-items:center; gap:6px; flex:1 1 auto; min-width:0;}
+.recipe-card .r-cat-ic{font-size:1.5rem; flex:none;}
+.ing-panel{
+  background:rgba(62,98,89,.09);
+  border-radius:14px;
+  padding:12px 16px;
+  margin-top:14px;
+}
+.panel-label{
+  font-size:.78rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--jade-dark); opacity:.75; margin-bottom:2px;
+}
+.ing-panel .ing-list{margin-top:2px;}
 .ing-list{list-style:none; margin:14px 0 0; padding:0; font-size:1.3rem;}
+.ing-panel .ing-list li{border-bottom-color:rgba(62,98,89,.15);}
+.method-panel{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px 16px 14px;
+  margin-top:12px;
+}
+.method-panel .steps-toggle{margin-top:0;}
+.method-panel .steps-list{margin-top:10px;}
+.method-panel .r-note{margin-top:10px;}
 .ing-list li{display:grid; grid-template-columns:3fr 1fr; align-items:baseline; gap:10px; padding:8px 0; border-bottom:1px dashed var(--line);}
 .ing-list li > span:first-child{display:flex; align-items:baseline; gap:5px; overflow-wrap:anywhere;}
 .ing-list li:last-child{border-bottom:none;}
@@ -189,7 +211,7 @@ button{font-family:inherit;}
   color:var(--jade-dark); border-top:1px dashed var(--line);
 }
 .ing-list li:first-child.ing-divider{border-top:none; margin-top:0; padding-top:0 !important;}
-.ing-qty{font-weight:700; color:var(--jade-dark); white-space:nowrap; text-align:right;}
+.ing-qty{font-weight:700; color:var(--jade-dark); white-space:nowrap; text-align:right; font-size:.88rem;}
 .steps-toggle{background:none;border:none;color:var(--jade-dark);font-weight:700;font-size:1.2rem;margin-top:14px;cursor:pointer;padding:0;}
 .steps-list{margin:14px 0 0; padding-left:1.2em; font-size:1.25rem; line-height:1.6; color:var(--ink);}
 .r-note{font-size:1.2rem; color:var(--ink-soft); margin-top:12px; font-style:italic;}
@@ -643,15 +665,20 @@ function renderRecipes(){
           <button data-act="serv-inc" data-id="${r.id}">＋</button>
         </div>
       </div>
-      <ul class="ing-list">
-        ${ings.map(i=> i.divider
-          ? `<li class="ing-divider">${escapeHtml(i.label)}</li>`
-          : `<li><span><span class="g">${GROUP_META[i.group]?.ic||''}</span>${escapeHtml(i.name)}</span><span class="ing-qty">${fmtQty(i.qty)}${i.unit?(' '+escapeHtml(i.unit)):''}</span></li>`
-        ).join('')}
-      </ul>
-      ${r.steps && r.steps.length? `<button class="steps-toggle" data-act="toggle-steps" data-id="${r.id}">${expanded?'Hide method ▲':'View method ▼'}</button>`:''}
-      ${expanded? `<ol class="steps-list">${r.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ol>`:''}
-      ${r.note?`<div class="r-note">${escapeHtml(r.note)}</div>`:''}
+      <div class="ing-panel">
+        <div class="panel-label">🧂 Ingredients</div>
+        <ul class="ing-list">
+          ${ings.map(i=> i.divider
+            ? `<li class="ing-divider">${escapeHtml(i.label)}</li>`
+            : `<li><span><span class="g">${GROUP_META[i.group]?.ic||''}</span>${escapeHtml(i.name)}</span><span class="ing-qty">${fmtQty(i.qty)}${i.unit?(' '+escapeHtml(i.unit)):''}</span></li>`
+          ).join('')}
+        </ul>
+      </div>
+      ${(r.steps && r.steps.length) || r.note ? `<div class="method-panel">
+        ${r.steps && r.steps.length? `<button class="steps-toggle" data-act="toggle-steps" data-id="${r.id}">${expanded?'Hide method ▲':'View method ▼'}</button>`:''}
+        ${expanded? `<ol class="steps-list">${r.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ol>`:''}
+        ${r.note?`<div class="r-note">${escapeHtml(r.note)}</div>`:''}
+      </div>` : ''}
       <div class="r-actions">
         <button class="act-add" data-act="add-to-week" data-id="${r.id}">＋ Add to This Week</button>
         <button class="act-edit" data-act="edit-recipe" data-id="${r.id}">Edit</button>
