@@ -25,25 +25,31 @@
   --line:#DDD2B8;
   --radius:18px;
   --shadow:0 6px 18px rgba(44,70,63,0.10);
+  --app-w:560px;
 }
 *{box-sizing:border-box;}
-html,body{margin:0;padding:0;}
+html,body{margin:0;padding:0;height:100%;}
 body{
   background:var(--bg);
   color:var(--ink);
   font-family:'Inter',sans-serif;
   -webkit-font-smoothing:antialiased;
   overscroll-behavior:none;
+  overflow:hidden;
 }
 #app{
-  max-width:560px;
+  max-width:var(--app-w);
   margin:0 auto;
-  min-height:100vh;
+  height:100vh;
+  height:100dvh;
   display:flex;
   flex-direction:column;
   background:var(--bg);
   position:relative;
+  overflow:hidden;
 }
+@media (min-width:700px){ :root{ --app-w:760px; } }
+@media (min-width:960px){ :root{ --app-w:860px; } }
 h1,h2,h3{font-family:'Fraunces',serif;margin:0;}
 button{font-family:inherit;}
 .topbar{
@@ -65,10 +71,11 @@ button{font-family:inherit;}
 }
 .topbar h1{font-size:1.15rem;font-weight:700;letter-spacing:.01em;}
 .topbar .sub{font-size:.72rem;opacity:.85;margin-top:1px;}
-#view{flex:1;padding:14px 14px 110px;}
+.topbar .sub:empty{display:none;}
+#view{flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px 14px 110px;}
 .tabbar{
   position:fixed; bottom:0; left:50%; transform:translateX(-50%);
-  width:100%; max-width:560px;
+  width:100%; max-width:var(--app-w);
   background:var(--surface);
   border-top:1px solid var(--line);
   display:flex;
@@ -114,77 +121,86 @@ button{font-family:inherit;}
 .empty-hint{color:var(--ink-soft); font-size:.85rem; text-align:center; padding:18px 6px;}
 
 /* stepper */
-.stepper{display:inline-flex; align-items:center; gap:0; border:1.5px solid var(--jade); border-radius:999px; overflow:hidden;}
+.stepper{display:inline-flex; align-items:center; gap:0; border:2px solid var(--jade); border-radius:999px; overflow:hidden;}
 .stepper button{
-  width:30px; height:30px; border:none; background:var(--jade); color:#fff;
-  font-size:1.1rem; font-weight:700; cursor:pointer; line-height:1;
+  width:44px; height:44px; border:none; background:var(--jade); color:#fff;
+  font-size:1.6rem; font-weight:700; cursor:pointer; line-height:1;
 }
 .stepper .val{
-  min-width:76px; text-align:center; font-weight:800; font-size:.8rem;
+  min-width:108px; text-align:center; font-weight:800; font-size:1.15rem;
   color:var(--jade-dark); background:#fff;
 }
 
 /* plan tab */
-.week-nav{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
-.week-nav button{background:var(--surface); border:1px solid var(--line); border-radius:10px; width:36px; height:36px; font-size:1rem; color:var(--jade-dark);}
-.week-range{font-family:'Fraunces',serif; font-weight:700; font-size:1rem;}
-.day-card{background:var(--surface); border-radius:14px; padding:12px 14px; margin-bottom:8px; border:1px solid rgba(44,70,63,.06);}
+.week-nav{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+.week-nav button{background:var(--surface); border:1px solid var(--line); border-radius:10px; width:40px; height:40px; font-size:1.15rem; color:var(--jade-dark);}
+.week-range{font-family:'Fraunces',serif; font-weight:700; font-size:1.15rem;}
+.days-wrap{display:flex; flex-direction:column;}
+.day-card{background:var(--surface); border-radius:14px; padding:16px 16px; margin-bottom:10px; border:1px solid rgba(44,70,63,.06);}
 .day-card.today{border-color:var(--turmeric); box-shadow:0 0 0 2px rgba(232,163,61,.25);}
-.day-head{display:flex; align-items:baseline; gap:8px; margin-bottom:8px;}
-.day-head .dow{font-family:'Fraunces',serif; font-weight:900; font-size:1.05rem; color:var(--jade-dark);}
-.day-head .date{font-size:.78rem; color:var(--ink-soft);}
+.day-head{display:flex; align-items:baseline; gap:10px; margin-bottom:10px;}
+.day-head .dow{font-family:'Fraunces',serif; font-weight:900; font-size:1.3rem; color:var(--jade-dark);}
+.day-head .date{font-size:.92rem; color:var(--ink-soft);}
 .slot{
   display:flex; align-items:center; justify-content:space-between;
-  background:var(--surface-2); border-radius:10px; padding:9px 10px; gap:8px;
+  background:var(--surface-2); border-radius:10px; padding:12px 12px; gap:8px;
 }
-.slot .content{flex:1; font-size:.88rem; font-weight:500; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.slot .content{flex:1; font-size:1.05rem; font-weight:500; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .slot.filled .content{color:var(--jade-dark); font-weight:700;}
-.slot .clear-x{border:none; background:none; color:var(--chili); font-size:1rem; padding:2px 4px; cursor:pointer;}
+.slot .clear-x{border:none; background:none; color:var(--chili); font-size:1.15rem; padding:2px 6px; cursor:pointer;}
 .slot .add-btn{border:none;background:none;color:var(--ink-soft);font-size:.85rem;flex:1;text-align:left;cursor:pointer;}
-.dish-list{display:flex; flex-direction:column; gap:6px;}
+.dish-list{display:flex; flex-direction:column; gap:8px;}
 .dish-list .slot{margin:0;}
 .dish-list .slot .content{white-space:normal;}
-.add-dish-btn{border:none; background:none; color:var(--jade-dark); font-size:.82rem; font-weight:700; text-align:left; cursor:pointer; padding:6px 2px 0;}
+.add-dish-btn{
+  border:1.5px dashed var(--line); background:none; color:var(--jade-dark);
+  font-size:1.15rem; font-weight:800; text-align:center; cursor:pointer;
+  padding:10px 2px; margin-top:8px; border-radius:10px; width:100%;
+}
+.add-dish-btn:active{background:var(--surface-2);}
+.plan-actions{padding-top:12px; display:flex; flex-direction:column; gap:10px;}
 
 /* recipes tab */
-.search-wrap{display:flex; gap:8px; margin-bottom:10px;}
+.search-wrap{display:flex; gap:8px; margin-bottom:14px;}
 .search-wrap input{
   flex:1; border:1.5px solid var(--line); background:var(--surface);
-  border-radius:12px; padding:10px 12px; font-size:.9rem; color:var(--ink);
+  border-radius:14px; padding:14px 16px; font-size:1.35rem; color:var(--ink);
 }
-.chips{display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; margin-bottom:10px;}
+.chips{display:flex; gap:8px; overflow-x:auto; padding-bottom:2px; margin-bottom:14px;}
 .chip{
-  flex:none; padding:7px 14px; border-radius:999px; border:1.5px solid var(--line);
-  background:var(--surface); color:var(--ink-soft); font-size:.82rem; font-weight:700; cursor:pointer;
+  flex:none; padding:11px 20px; border-radius:999px; border:1.5px solid var(--line);
+  background:var(--surface); color:var(--ink-soft); font-size:1.2rem; font-weight:700; cursor:pointer;
   white-space:nowrap;
 }
 .chip.active{background:var(--jade); border-color:var(--jade); color:#fff;}
-.recipe-card .r-head{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
-.recipe-card .r-title{font-family:'Fraunces',serif; font-weight:700; font-size:1.05rem; display:flex; align-items:center; gap:6px;}
-.recipe-card .r-cat-ic{font-size:1.15rem;}
-.ing-list{list-style:none; margin:10px 0 0; padding:0; font-size:.88rem;}
-.ing-list li{display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed var(--line);}
+.recipe-card{padding:22px 20px; margin-bottom:16px;}
+.recipe-card .r-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+.recipe-card .r-title{font-family:'Fraunces',serif; font-weight:700; font-size:1.6rem; display:flex; align-items:center; gap:8px;}
+.recipe-card .r-cat-ic{font-size:1.75rem;}
+.ing-list{list-style:none; margin:14px 0 0; padding:0; font-size:1.3rem;}
+.ing-list li{display:grid; grid-template-columns:3fr 1fr; align-items:baseline; gap:10px; padding:8px 0; border-bottom:1px dashed var(--line);}
+.ing-list li > span:first-child{display:flex; align-items:baseline; gap:5px; overflow-wrap:anywhere;}
 .ing-list li:last-child{border-bottom:none;}
-.ing-list .g{color:var(--ink-soft); font-size:.72rem; margin-right:6px;}
+.ing-list .g{color:var(--ink-soft); font-size:1.05rem; margin-right:2px;}
 .ing-divider{
   display:block !important; justify-content:flex-start !important;
-  padding:10px 0 4px !important; margin-top:2px; border-bottom:none !important;
-  font-size:.72rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+  padding:14px 0 6px !important; margin-top:2px; border-bottom:none !important;
+  font-size:1.05rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
   color:var(--jade-dark); border-top:1px dashed var(--line);
 }
 .ing-list li:first-child.ing-divider{border-top:none; margin-top:0; padding-top:0 !important;}
-.ing-qty{font-weight:700; color:var(--jade-dark); white-space:nowrap;}
-.steps-toggle{background:none;border:none;color:var(--jade-dark);font-weight:700;font-size:.82rem;margin-top:10px;cursor:pointer;padding:0;}
-.steps-list{margin:10px 0 0; padding-left:1.2em; font-size:.85rem; line-height:1.65; color:var(--ink);}
-.r-note{font-size:.82rem; color:var(--ink-soft); margin-top:8px; font-style:italic;}
-.r-actions{display:flex; gap:14px; margin-top:12px; flex-wrap:wrap;}
-.r-actions button{border:none; background:none; font-weight:700; font-size:.82rem; cursor:pointer; padding:0;}
+.ing-qty{font-weight:700; color:var(--jade-dark); white-space:nowrap; text-align:right;}
+.steps-toggle{background:none;border:none;color:var(--jade-dark);font-weight:700;font-size:1.2rem;margin-top:14px;cursor:pointer;padding:0;}
+.steps-list{margin:14px 0 0; padding-left:1.2em; font-size:1.25rem; line-height:1.6; color:var(--ink);}
+.r-note{font-size:1.2rem; color:var(--ink-soft); margin-top:12px; font-style:italic;}
+.r-actions{display:flex; gap:18px; margin-top:16px; flex-wrap:wrap;}
+.r-actions button{border:none; background:none; font-weight:700; font-size:1.2rem; cursor:pointer; padding:0;}
 .act-add{color:var(--jade-dark);}
 .act-edit{color:var(--ink-soft);}
 .act-del{color:var(--chili);}
 
 .fab{
-  position:fixed; right:calc(50% - 260px + 18px); bottom:calc(78px + env(safe-area-inset-bottom,0px));
+  position:fixed; right:calc(50% - (var(--app-w) / 2) + 18px); bottom:calc(78px + env(safe-area-inset-bottom,0px));
   width:52px; height:52px; border-radius:16px; background:var(--chili); color:#fff;
   border:none; font-size:1.6rem; box-shadow:0 8px 20px rgba(193,68,14,.35); cursor:pointer; z-index:25;
 }
@@ -226,7 +242,7 @@ button{font-family:inherit;}
   display:flex; align-items:flex-end; justify-content:center;
 }
 .modal-sheet{
-  background:var(--surface); width:100%; max-width:560px; border-radius:22px 22px 0 0;
+  background:var(--surface); width:100%; max-width:var(--app-w); border-radius:22px 22px 0 0;
   padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px)); max-height:88vh; overflow-y:auto;
   animation:slideup .22s ease;
 }
@@ -255,6 +271,24 @@ button{font-family:inherit;}
 .ing-divider-label{font-weight:700; color:var(--jade-dark); background:var(--surface-2) !important;}
 .ing-row input, .ing-row select{padding:7px 6px; font-size:.78rem;}
 .ing-row .rm{border:none;background:none;color:var(--chili);font-size:1.1rem;cursor:pointer;}
+/* inspire tab */
+.reel-card{
+  position:relative; overflow:hidden;
+  background:linear-gradient(135deg, var(--jade) 0%, var(--jade-dark) 100%);
+  border-radius:var(--radius); padding:30px 20px; text-align:center; color:#fff;
+  margin-bottom:14px; box-shadow:var(--shadow);
+}
+.reel-card::before{
+  content:''; position:absolute; inset:8px; border:2px dashed rgba(255,255,255,.28);
+  border-radius:calc(var(--radius) - 6px); pointer-events:none;
+}
+.reel-label{font-size:.74rem; text-transform:uppercase; letter-spacing:.09em; opacity:.8; margin-bottom:12px; font-weight:700;}
+.reel-display{display:flex; flex-direction:column; align-items:center; gap:8px; min-height:64px; justify-content:center;}
+.reel-ic{font-size:2.5rem; line-height:1;}
+.reel-name{font-family:'Fraunces',serif; font-weight:800; font-size:1.25rem; line-height:1.3;}
+.spin-btn{font-size:1rem; padding:13px 16px;}
+.spin-btn[disabled]{opacity:.65;}
+.inspire-result{margin-top:14px;}
 .pick-list{max-height:40vh; overflow-y:auto; border:1px solid var(--line); border-radius:12px;}
 .pick-item{padding:11px 14px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; cursor:pointer;}
 .pick-item:last-child{border-bottom:none;}
@@ -271,7 +305,10 @@ button{font-family:inherit;}
         <div class="sub" id="topbarSub">Weekly menu · scalable servings · shopping list</div>
       </div>
     </div>
-    <button class="settings-btn" data-act="open-api-key" title="API Settings">⚙️</button>
+    <div style="position:relative;">
+      <button class="settings-btn" data-act="open-api-key" title="Settings">⚙️</button>
+      <span id="syncDot" style="position:absolute;top:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:transparent;border:1.5px solid #fff;pointer-events:none;"></span>
+    </div>
   </header>
   <main id="view"></main>
   <button class="fab fab-ai" id="fabAiBtn" style="display:none;">✨</button>
@@ -279,6 +316,7 @@ button{font-family:inherit;}
   <nav class="tabbar">
     <button data-tab="plan" class="tab-btn"><span class="ic">🗓️</span>Weekly Plan</button>
     <button data-tab="recipes" class="tab-btn"><span class="ic">📖</span>Recipes</button>
+    <button data-tab="inspire" class="tab-btn"><span class="ic">🎲</span>Inspire</button>
     <button data-tab="shopping" class="tab-btn"><span class="ic">🧾</span>Shopping List</button>
   </nav>
 </div>
@@ -406,7 +444,13 @@ function load(){
     return Object.assign(base, parsed);
   }catch(e){ return defaultState(); }
 }
-function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function save(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  if(fb.user && !fb.applyingRemote){
+    clearTimeout(fb.syncTimer);
+    fb.syncTimer = setTimeout(pushToCloud, 500);
+  }
+}
 // Upgrades older saved data so every day only has a single "dinner" dish list
 // (lunch was removed; any dishes previously planned for lunch are merged in).
 function migrateWeeks(){
@@ -487,11 +531,12 @@ function render(){
   document.querySelectorAll('.tab-btn').forEach(b=> b.classList.toggle('active', b.dataset.tab===currentTab));
   document.getElementById('fabBtn').style.display = currentTab==='recipes' ? 'block' : 'none';
   document.getElementById('fabAiBtn').style.display = currentTab==='recipes' ? 'block' : 'none';
-  const sub = {plan:'Plan out the week ahead', recipes:'Scale servings up or down', shopping:'Big, clear text for the grocery run'};
+  const sub = {plan:'Plan out the week ahead', recipes:'', shopping:'Big, clear text for the grocery run', inspire:"Spin for tonight's dinner idea"};
   document.getElementById('topbarSub').textContent = sub[currentTab];
   const view = document.getElementById('view');
   if(currentTab==='plan') view.innerHTML = renderPlan();
   else if(currentTab==='recipes') view.innerHTML = renderRecipes();
+  else if(currentTab==='inspire') view.innerHTML = renderInspire();
   else view.innerHTML = renderShopping();
 }
 
@@ -507,7 +552,8 @@ function renderPlan(){
     <button data-act="week-prev">‹</button>
     <div class="week-range">${fmtShort(startD)} – ${fmtShort(endD)}</div>
     <button data-act="week-next">›</button>
-  </div>`;
+  </div>
+  <div class="days-wrap">`;
 
   for(let i=0;i<7;i++){
     const dISO = isoDate(addDays(iso,i));
@@ -522,12 +568,14 @@ function renderPlan(){
     </div>`;
   }
 
-  html += `
-  <div class="row gap8" style="margin-top:14px;">
-    <button class="btn btn-ghost" data-act="copy-last-week" style="flex:1;">Copy Last Week</button>
-    <button class="btn btn-danger" data-act="clear-week" style="flex:none;">Clear Week</button>
+  html += `</div>
+  <div class="plan-actions">
+    <div class="row gap8">
+      <button class="btn btn-ghost" data-act="copy-last-week" style="flex:1;">Copy Last Week</button>
+      <button class="btn btn-danger" data-act="clear-week" style="flex:none;">Clear Week</button>
+    </div>
+    <button class="btn btn-primary btn-block" data-act="go-shopping">🧾 View This Week's Shopping List</button>
   </div>
-  <button class="btn btn-primary btn-block" data-act="go-shopping" style="margin-top:10px;">🧾 View This Week's Shopping List</button>
   `;
   return html;
 }
@@ -544,7 +592,7 @@ function renderSlot(iso, dayKey, entries){
     </div>`;
   }).join('');
   return `<div class="dish-list">${rows}</div>
-  <button class="add-dish-btn" data-act="edit-slot" data-iso="${iso}" data-day="${dayKey}">＋ ${entries.length? 'Add another dish':'Plan dinner for this day'}</button>`;
+  <button class="add-dish-btn" data-act="edit-slot" data-iso="${iso}" data-day="${dayKey}">＋</button>`;
 }
 
 /* =============== Recipes =============== */
@@ -615,6 +663,82 @@ function renderRecipes(){
 }
 function chip(cat,label){
   return `<button class="chip ${recipeFilter.cat===cat?'active':''}" data-act="filter-cat" data-cat="${cat}">${label}</button>`;
+}
+
+/* =============== Inspire (lucky draw) =============== */
+let inspireFilter = {cat:'all'};
+let inspireResult = null; // recipe id
+let inspireSpinning = false;
+
+function inspireList(){
+  return state.recipes.filter(r=> inspireFilter.cat==='all' || r.category===inspireFilter.cat);
+}
+function chipInspire(cat,label){
+  return `<button class="chip ${inspireFilter.cat===cat?'active':''}" data-act="filter-cat-inspire" data-cat="${cat}">${label}</button>`;
+}
+function renderInspire(){
+  const list = inspireList();
+  let html = `<div class="chips">
+    ${chipInspire('all','All')}${chipInspire('main','🍚 Mains')}${chipInspire('soup','🍜 Soups')}${chipInspire('side','🥗 Sides')}${chipInspire('eatout','🥡 Eating Out')}
+  </div>`;
+
+  if(list.length===0){
+    html += `<div class="empty-hint">No recipes in this category yet. Add some in Recipes first!</div>`;
+    return html;
+  }
+
+  const picked = inspireResult ? recipeById(inspireResult) : null;
+
+  html += `<div class="reel-card">
+    <div class="reel-label">${inspireSpinning ? 'Spinning…' : (picked ? "Tonight's pick" : 'Ready when you are')}</div>
+    <div class="reel-display" id="inspireReel">
+      ${picked
+        ? `<span class="reel-ic">${picked.category==='eatout'?'🥡':CAT_META[picked.category].ic}</span><span class="reel-name">${escapeHtml(picked.name)}</span>`
+        : `<span class="reel-ic">🎲</span><span class="reel-name">Spin to decide</span>`}
+    </div>
+  </div>
+  <button class="btn btn-primary btn-block spin-btn" data-act="spin" ${inspireSpinning?'disabled':''}>${inspireSpinning?'🎲 Spinning…':(picked?'🎲 Spin Again':'🎲 Spin for an Idea')}</button>`;
+
+  if(picked && !inspireSpinning){
+    if(picked.category==='eatout'){
+      html += `<div class="card recipe-card inspire-result">
+        <div class="r-head"><div class="r-title"><span class="r-cat-ic">🥡</span>${escapeHtml(picked.name)}</div></div>
+        ${picked.note?`<div class="r-note">${escapeHtml(picked.note)}</div>`:''}
+        <div class="r-actions"><button class="act-add" data-act="add-to-week" data-id="${picked.id}">＋ Add to This Week</button></div>
+      </div>`;
+    } else {
+      const ings = scaledIngredients(picked).filter(i=>!i.divider);
+      html += `<div class="card recipe-card inspire-result">
+        <div class="r-head"><div class="r-title"><span class="r-cat-ic">${CAT_META[picked.category].ic}</span>${escapeHtml(picked.name)}</div></div>
+        <div style="font-size:1rem;color:var(--ink-soft);margin-bottom:8px;">${ings.length} ingredients${picked.note? ' · '+escapeHtml(picked.note):''}</div>
+        <div class="r-actions"><button class="act-add" data-act="add-to-week" data-id="${picked.id}">＋ Add to This Week</button></div>
+      </div>`;
+    }
+  }
+  return html;
+}
+function spin(){
+  const list = inspireList();
+  if(list.length===0 || inspireSpinning) return;
+  inspireSpinning = true;
+  render();
+  let ticks = 0;
+  const maxTicks = 14;
+  const timer = setInterval(()=>{
+    ticks++;
+    const r = list[Math.floor(Math.random()*list.length)];
+    const el = document.getElementById('inspireReel');
+    if(el){
+      el.innerHTML = `<span class="reel-ic">${r.category==='eatout'?'🥡':CAT_META[r.category].ic}</span><span class="reel-name">${escapeHtml(r.name)}</span>`;
+    }
+    if(ticks>=maxTicks){
+      clearInterval(timer);
+      const winner = list[Math.floor(Math.random()*list.length)];
+      inspireResult = winner.id;
+      inspireSpinning = false;
+      render();
+    }
+  }, 90);
 }
 
 /* =============== Shopping list =============== */
@@ -743,6 +867,8 @@ document.addEventListener('click', (e)=>{
     openDayMealPicker(t.dataset.id);
   }
   else if(act==='filter-cat'){ recipeFilter.cat = t.dataset.cat; render(); }
+  else if(act==='filter-cat-inspire'){ inspireFilter.cat = t.dataset.cat; inspireResult = null; render(); }
+  else if(act==='spin'){ spin(); }
   else if(act==='serv-inc'){
     const r = recipeById(t.dataset.id);
     state.recipeServings[r.id] = Math.min(20, getServings(r)+1);
@@ -800,6 +926,10 @@ document.addEventListener('click', (e)=>{
   else if(act==='pick-day'){ chooseDayForPreset(t.dataset.day); }
   else if(act==='open-api-key'){ openAPISettings(); }
   else if(act==='save-api-key'){ saveAPIKeySetting(); }
+  else if(act==='save-firebase-config'){ saveFirebaseConfigFromForm(); }
+  else if(act==='sync-signin'){ signInWithGoogle(); }
+  else if(act==='sync-signout'){ signOutCloud(); }
+  else if(act==='reset-firebase-config'){ resetFirebaseConfig(); }
   else if(act==='ai-camera'){ document.getElementById('aiCameraInput').click(); }
   else if(act==='ai-upload'){ document.getElementById('aiUploadInput').click(); }
   else if(act==='ai-remove-img'){ aiImportImages.splice(parseInt(t.dataset.idx),1); renderAIThumbs(); }
@@ -1007,26 +1137,165 @@ function saveRecipeForm(){
   save(); closeModal(); render();
 }
 
-/* =============== API Settings =============== */
+/* =============== Settings (API Key + Firebase cloud sync) =============== */
 function openAPISettings(){
+  const cfg = loadFirebaseConfig();
+  const cfgText = cfg ? JSON.stringify(cfg, null, 2) : '';
   const html = `
-  <div class="modal-head"><h3>API Settings</h3><button class="modal-close" data-act="close-modal">✕</button></div>
+  <div class="modal-head"><h3>Settings</h3><button class="modal-close" data-act="close-modal">✕</button></div>
+
+  <div class="section-title">✨ AI Import Recipe</div>
   <div class="field">
     <label>Anthropic API Key</label>
     <input type="password" id="apiKeyInput" placeholder="sk-ant-..." value="${escapeHtml(state.apiKey||'')}">
   </div>
   <div class="r-note" style="margin-bottom:14px;">
-    This key stays on this device's browser only — it's never uploaded anywhere else. You can get one at
+    This key stays on this device's browser only — it's never uploaded anywhere, and never synced to the cloud. You can get one at
     <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener" style="color:var(--jade-dark);font-weight:700;">console.anthropic.com</a>.
     Using "AI Import Recipe" bills usage to your own Anthropic account.
   </div>
-  <button class="btn btn-primary btn-block" data-act="save-api-key">Save</button>
+  <button class="btn btn-primary btn-block" data-act="save-api-key" style="margin-bottom:24px;">Save API Key</button>
+
+  <div class="section-title">☁️ Cloud Sync (real-time across devices)</div>
+  ${!fb.ready ? `
+    <div class="r-note" style="margin-bottom:10px;">
+      Paste your Firebase project's config object (Console → Project settings → General → Your apps → SDK setup and configuration). Once saved, this device connects automatically.
+    </div>
+    <div class="field">
+      <textarea id="fbConfigInput" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}' style="min-height:120px;font-family:monospace;font-size:.75rem;">${escapeHtml(cfgText)}</textarea>
+    </div>
+    <button class="btn btn-primary btn-block" data-act="save-firebase-config">Save & Connect</button>
+  ` : `
+    <div class="r-note" style="margin-bottom:10px;">Firebase is connected.${fb.user? '':' Sign in with Google to enable cross-device sync.'}</div>
+    ${fb.user ? `
+      <div class="field"><label>Signed in as</label><div style="font-size:.92rem;font-weight:700;color:var(--jade-dark);">${escapeHtml(fb.user.email||fb.user.displayName||'Signed in')}</div></div>
+      <button class="btn btn-danger" data-act="sync-signout">Sign Out</button>
+    ` : `
+      <button class="btn btn-primary btn-block" data-act="sync-signin">Sign in with Google</button>
+    `}
+    <button class="btn btn-ghost btn-block" data-act="reset-firebase-config" style="margin-top:10px;">Clear Firebase Settings</button>
+  `}
   `;
   openModal(html);
 }
 function saveAPIKeySetting(){
   state.apiKey = document.getElementById('apiKeyInput').value.trim();
   save(); closeModal();
+}
+
+/* ---- Parse a Firebase config: accepts strict JSON, or the JS object literal copied from the console ---- */
+function parseFirebaseConfig(raw){
+  if(!raw) return null;
+  try{ return JSON.parse(raw); }catch(e){}
+  try{
+    const match = raw.match(/{[\s\S]*}/);
+    if(!match) return null;
+    let str = match[0]
+      .replace(/([{,]\s*)([A-Za-z0-9_$]+)\s*:/g, '$1"$2":')
+      .replace(/,(\s*[}\]])/g, '$1');
+    return JSON.parse(str);
+  }catch(e){ return null; }
+}
+function loadFirebaseConfig(){
+  try{ return JSON.parse(localStorage.getItem('firebaseConfigV1')||'null'); }catch(e){ return null; }
+}
+function saveFirebaseConfigToStorage(cfg){ localStorage.setItem('firebaseConfigV1', JSON.stringify(cfg)); }
+
+function saveFirebaseConfigFromForm(){
+  const raw = document.getElementById('fbConfigInput').value.trim();
+  const cfg = parseFirebaseConfig(raw);
+  if(!cfg || !cfg.apiKey || !cfg.projectId){
+    alert('Could not read that config. Make sure it\'s the full config object copied from the Firebase console (must include apiKey and projectId).');
+    return;
+  }
+  saveFirebaseConfigToStorage(cfg);
+  initFirebase(cfg).then(()=>{ closeModal(); openAPISettings(); });
+}
+function resetFirebaseConfig(){
+  if(!confirm('Clear the Firebase settings? Data on this device is kept — it just stops syncing with other devices.')) return;
+  if(fb.unsubscribe){ fb.unsubscribe(); }
+  if(fb.auth && fb.authMod){ fb.authMod.signOut(fb.auth).catch(()=>{}); }
+  localStorage.removeItem('firebaseConfigV1');
+  fb = {app:null, auth:null, db:null, authMod:null, fsMod:null, user:null, ready:false, syncTimer:null, applyingRemote:false, unsubscribe:null};
+  renderSyncStatus();
+  closeModal(); openAPISettings();
+}
+
+/* ---- Firebase init & real-time sync ---- */
+let fb = {app:null, auth:null, db:null, authMod:null, fsMod:null, user:null, ready:false, syncTimer:null, applyingRemote:false, unsubscribe:null};
+
+async function initFirebase(cfg){
+  try{
+    const appMod = await import('https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js');
+    const authMod = await import('https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js');
+    const fsMod = await import('https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js');
+    fb.app = appMod.initializeApp(cfg);
+    fb.auth = authMod.getAuth(fb.app);
+    fb.db = fsMod.getFirestore(fb.app);
+    fb.authMod = authMod;
+    fb.fsMod = fsMod;
+    fb.ready = true;
+    authMod.onAuthStateChanged(fb.auth, (user)=>{
+      fb.user = user;
+      if(user){ subscribeCloud(); }
+      else if(fb.unsubscribe){ fb.unsubscribe(); fb.unsubscribe = null; }
+      renderSyncStatus();
+    });
+    renderSyncStatus();
+  }catch(err){
+    alert('Firebase connection failed: ' + (err.message||err) + '\n\nPlease check the config you pasted.');
+  }
+}
+async function signInWithGoogle(){
+  if(!fb.ready){ alert('Please paste and save your Firebase config first.'); return; }
+  try{
+    const provider = new fb.authMod.GoogleAuthProvider();
+    await fb.authMod.signInWithPopup(fb.auth, provider);
+    closeModal(); openAPISettings();
+  }catch(err){
+    alert('Sign-in failed: ' + (err.message||err) + '\n\nMake sure Google sign-in is enabled under Authentication in the Firebase console, and this site\'s domain is in the Authorized domains list.');
+  }
+}
+function signOutCloud(){
+  if(fb.auth && fb.authMod){ fb.authMod.signOut(fb.auth); }
+  closeModal(); openAPISettings();
+}
+function subscribeCloud(){
+  if(!fb.user || !fb.db || !fb.fsMod) return;
+  if(fb.unsubscribe) fb.unsubscribe();
+  const ref = fb.fsMod.doc(fb.db, 'users', fb.user.uid, 'app', 'state');
+  fb.unsubscribe = fb.fsMod.onSnapshot(ref, (snap)=>{
+    if(snap.exists()){
+      fb.applyingRemote = true;
+      Object.assign(state, snap.data());
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      render();
+      fb.applyingRemote = false;
+    }else{
+      pushToCloud();
+    }
+    renderSyncStatus();
+  }, (err)=>{ console.error('Cloud sync listener failed', err); });
+}
+function pushToCloud(){
+  if(!fb.user || !fb.db || !fb.fsMod || fb.applyingRemote) return;
+  const ref = fb.fsMod.doc(fb.db, 'users', fb.user.uid, 'app', 'state');
+  const payload = {
+    recipes: state.recipes,
+    recipeServings: state.recipeServings,
+    weeks: state.weeks,
+    viewWeekStart: state.viewWeekStart,
+    shoppingChecked: state.shoppingChecked,
+    shoppingCustom: state.shoppingCustom
+  };
+  fb.fsMod.setDoc(ref, payload).catch(err=> console.error('Cloud sync write failed', err));
+}
+function renderSyncStatus(){
+  const dot = document.getElementById('syncDot');
+  if(!dot) return;
+  if(fb.user){ dot.style.background = '#6B7F3E'; dot.title = 'Connected & syncing: ' + (fb.user.email||''); }
+  else if(fb.ready){ dot.style.background = '#E8A33D'; dot.title = 'Firebase connected, not signed in'; }
+  else{ dot.style.background = 'transparent'; dot.title = ''; }
 }
 
 /* =============== AI Import Recipe =============== */
@@ -1195,6 +1464,9 @@ if('serviceWorker' in navigator){
   });
 }
 render();
+renderSyncStatus();
+const savedFbConfig = loadFirebaseConfig();
+if(savedFbConfig){ initFirebase(savedFbConfig); }
 </script>
 </body>
 </html>
