@@ -451,6 +451,7 @@ function defaultState(){
     viewWeekStart: isoDate(getMonday(new Date())),
     shoppingChecked: {},   // key -> bool
     shoppingCustom: [],    // {id,name,checked}
+    shoppingExcluded: {},  // key -> true (manually removed from auto-generated list)
     apiKey: ''              // Anthropic API key for AI recipe import (stored locally only)
   };
 }
@@ -791,7 +792,7 @@ function computeShoppingItems(){
 }
 
 function renderShopping(){
-  const items = computeShoppingItems();
+  const items = computeShoppingItems().filter(it => !state.shoppingExcluded[it.name+'|'+it.unit]);
   const iso = state.viewWeekStart;
   const startD = new Date(iso+'T00:00:00'); const endD = addDays(iso,6);
 
@@ -829,6 +830,7 @@ function renderShopping(){
         <div class="shop-check">${checked?'✓':''}</div>
         <div class="shop-name">${escapeHtml(it.name)}</div>
         <div class="shop-qty">${fmtQty(it.qty)}${it.unit?(' '+escapeHtml(it.unit)):''}</div>
+        <button class="shop-note-del" data-act="del-item" data-key="${escapeHtml(key)}">✕</button>
       </div>`;
     });
   });
@@ -879,7 +881,7 @@ document.addEventListener('click', (e)=>{
     save(); render();
   }
   else if(act==='go-shopping'){ currentTab='shopping'; render(); }
-  else if(act==='refresh-shopping'){ render(); }
+  else if(act==='refresh-shopping'){ state.shoppingExcluded = {}; save(); render(); }
   else if(act==='remove-dish'){
     const week = ensureWeek(t.dataset.iso);
     week[t.dataset.day].dinner.splice(parseInt(t.dataset.idx),1);
@@ -919,6 +921,10 @@ document.addEventListener('click', (e)=>{
     state.shoppingChecked[key] = !state.shoppingChecked[key];
     save(); render();
   }
+  else if(act==='del-item'){
+    state.shoppingExcluded[t.dataset.key] = true;
+    save(); render();
+  }
   else if(act==='toggle-custom'){
     const c = state.shoppingCustom.find(x=>x.id===t.dataset.id);
     if(c){ c.checked = !c.checked; save(); render(); }
@@ -933,13 +939,16 @@ document.addEventListener('click', (e)=>{
     if(val){ state.shoppingCustom.push({id:'c'+Date.now(), name:val, checked:false}); save(); render(); }
   }
   else if(act==='clear-checked'){
-    Object.keys(state.shoppingChecked).forEach(k=> state.shoppingChecked[k]=false);
+    computeShoppingItems().forEach(it=>{
+      const key = it.name+'|'+it.unit;
+      if(state.shoppingChecked[key]) state.shoppingExcluded[key] = true;
+    });
     state.shoppingCustom = state.shoppingCustom.filter(c=>!c.checked);
     save(); render();
   }
   else if(act==='clear-all-shopping'){
     if(confirm('Clear all checkmarks and custom items from this list?')){
-      state.shoppingChecked = {}; state.shoppingCustom = [];
+      state.shoppingChecked = {}; state.shoppingCustom = []; state.shoppingExcluded = {};
       save(); render();
     }
   }
@@ -1313,7 +1322,8 @@ function pushToCloud(){
     weeks: state.weeks,
     viewWeekStart: state.viewWeekStart,
     shoppingChecked: state.shoppingChecked,
-    shoppingCustom: state.shoppingCustom
+    shoppingCustom: state.shoppingCustom,
+    shoppingExcluded: state.shoppingExcluded
   };
   fb.fsMod.setDoc(ref, payload).catch(err=> console.error('Cloud sync write failed', err));
 }
